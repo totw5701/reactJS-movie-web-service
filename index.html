@@ -13,11 +13,24 @@
 Js     - HTML에서 element를 받아와 조작한다.
 React  - JS에서부터 시작된다. 
 createElement는 거의 사용하지 않는다.
+
+const method = () => {
+  console.log("hello");
+}
+
+function method() {
+  return (
+    console.log("hello");
+  );
+}
+
 -->
 
 <script src="https://unpkg.com/react@17.0.2/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js" crossorigin></script>
-<script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> <!--Babel standalone, 이 import 방식은 느려서 실무에서는 사용하지 않음.-->
+
+<script type="text/babel">
   const root = document.getElementById("root");
   const span = React.createElement(
       "span", 
@@ -26,30 +39,33 @@ createElement는 거의 사용하지 않는다.
     ); // 이 방식은 사용하지 않는다. 
   ReactDOM.render(span, root);
 
+  <span>---------------------</span>
 
   const root2 = document.getElementById("root2");
-  const h3 = React.createElement(
-    "h3",
-    {
-      id: "title",
-      onMouseEnter: () => console.log("mouse enter")
-    },
-    "Hello I'm a title."
+  
+  function App(){
+    const [counter, setCounter] = React.useState(0);   // 배열을 제공, 첫번째에 변수 두번째에 function
+    const onClick = () => {
+      // setCounter(counter + 1); // state에 변경이 감지되면 다시 render한다.
+      setCounter((counter) => counter + 1); // 다른데서 변경했을지도 모르는 counter의 최신 값을 다시 가져온다. 
+    };
+
+    return ( 
+      <div>
+        <h3>Total clicks : {counter}</h3>
+        <button onClick={onClick}>click me</button>
+      </div>
     );
-  const btn = React.createElement(
-    "button",
-    {
-      onClick: () => console.log("IM clikced"),
-      style: {
-        backgroundColor: "tomato"
-      }
-    },
-    "click me"
-  );
-
-  const container = React.createElement("div", null, [h3, btn]);
-
-  ReactDOM.render(container, root2);
-
+  }
+  ReactDOM.render(<App />, root2);
 </script>
+
+<script>
+  const food = ["tomato", "potato"];
+  const [first, second] = food;
+
+  console.log(first);
+  console.log(second);
+</script>
+
 </html>
