@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-</head>
+  <head> </head>
 
-<body>
-  <div id="root"></div>
+  <body>
+    <div id="root"></div>
 
-  <div id="root2"></div>
-</body>
+    <div id="root2"></div>
+  </body>
 
-<!-- 메모
+  <!-- 메모
 Js     - HTML에서 element를 받아와 조작한다.
 React  - JS에서부터 시작된다. 
 createElement는 거의 사용하지 않는다.
@@ -26,46 +25,130 @@ function method() {
 
 -->
 
-<script src="https://unpkg.com/react@17.0.2/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> <!--Babel standalone, 이 import 방식은 느려서 실무에서는 사용하지 않음.-->
+  <script
+    src="https://unpkg.com/react@17.0.2/umd/react.development.js"
+    crossorigin
+  ></script>
+  <script
+    src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"
+    crossorigin
+  ></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!--Babel standalone, 이 import 방식은 느려서 실무에서는 사용하지 않음.-->
 
-<script type="text/babel">
-  const root = document.getElementById("root");
-  const span = React.createElement(
-      "span", 
-      {id: "sexy-span"}, 
-      "Hello I am a span"
-    ); // 이 방식은 사용하지 않는다. 
-  ReactDOM.render(span, root);
+  <script type="text/babel">
+    const root = document.getElementById("root");
 
-  <span>---------------------</span>
+    function MinutesToHours() {
+      const [amount, setAmount] = React.useState(0);
+      const [inverted, setInverted] = React.useState(false);
 
-  const root2 = document.getElementById("root2");
-  
-  function App(){
-    const [counter, setCounter] = React.useState(0);   // 배열을 제공, 첫번째에 변수 두번째에 function
-    const onClick = () => {
-      // setCounter(counter + 1); // state에 변경이 감지되면 다시 render한다.
-      setCounter((counter) => counter + 1); // 다른데서 변경했을지도 모르는 counter의 최신 값을 다시 가져온다. 
-    };
+      const onChange = (event) => {
+        setAmount((amount) => event.target.value);
+      };
 
-    return ( 
-      <div>
-        <h3>Total clicks : {counter}</h3>
-        <button onClick={onClick}>click me</button>
-      </div>
-    );
-  }
-  ReactDOM.render(<App />, root2);
-</script>
+      const reset = () => setAmount(0);
+      const onFlip = () => {
+        reset();
+        setInverted((current) => !current);
+      }
 
-<script>
-  const food = ["tomato", "potato"];
-  const [first, second] = food;
+      return (
+        <div>
+          <div>
+            <label htmlFor="amount">Minutes</label>
+            <input
+              value={inverted ? amount * 60 : amount}
+              id="amount"
+              placeholder="Minutes"
+              type="number"
+              onChange={onChange}
+              disabled={inverted}
+            />
+          </div>
 
-  console.log(first);
-  console.log(second);
-</script>
+          <div>
+            <label htmlFor="hours">Hours</label>
+            <input
+              value={!inverted ? (Math.round(amount/60 * 10) /10) : amount}
+              id="hours"
+              placeholder="Hours"
+              type="number"
+              onChange={onChange}
+              disabled={!inverted}
+            />
+          </div>
+          <button onClick={reset}>Reset</button>
+          <button onClick={onFlip}>{inverted ? "minutes" : "hours"}</button>
+        </div>
+      );
+    }
+    
+    function KmToMiles() {
+      const [amount, setAmount] = React.useState("0");
+      const [isKilo, setIsKilo] = React.useState(false);
 
+      const onChange = (event) => {
+        setAmount(event.target.value);
+      }
+
+      const reset = () => setAmount(0);
+
+      const invert = () => {
+        reset();
+        setIsKilo((current) => !current);
+      }
+
+      return (
+        <div>
+          <div>
+            <label htmlFor="Kilometer">kilometer</label>
+            <input
+              value={isKilo ? Math.round(amount / 1.609 * 100) / 100 : amount}
+              id="Kilometer"
+              placeholder="Kilometer"
+              type="number"
+              disabled={isKilo}
+              onChange={onChange}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="Miles">Miles</label>
+            <input
+              value={!isKilo ? Math.round((amount * 1.609) * 100) / 100 : amount}
+              id="Miles"
+              placeholder="Miles"
+              type="number"
+              disabled={!isKilo}
+              onChange={onChange}
+            />
+          </div>
+          <button onClick={reset}>Reset</button>
+          <button onClick={invert}>{!isKilo ? "Miles" : "Kilo"}</button>
+        </div>
+      );
+
+    }
+
+    function App() {
+      const [index, setIndex] = React.useState("0");
+      const onSelect = () => {
+        setIndex(event.target.value);
+      }
+      return (
+        <div>
+          <h1 className="hi">Super Converter</h1>
+          <select value={index} onChange={onSelect}>
+            <option value="0">Minutes & Hours</option>
+            <option value="1">Kilometer & Miles</option>
+          </select>
+          {index === "0" ? <MinutesToHours /> : null}
+          {index === "1" ? <KmToMiles /> : null}
+        </div>
+      );
+    }
+    
+    ReactDOM.render(<App />, root2);
+  </script>
 </html>
